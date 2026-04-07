@@ -1,4 +1,4 @@
-# Student Internal Marks Assessment Portal
+# Students Internal Marks Assessment Portal
 
 A **production-ready**, full-stack Student Internal Marks Assessment Portal built with **React + Vite + Tailwind CSS** on the frontend and **Node.js + Express + MySQL** on the backend. Features real-time notifications via Firebase, PDF marksheet generation, Excel export, AWS S3 file storage, and AWS SES email alerts.
 
