@@ -5,7 +5,7 @@ import axios from 'axios'
 import toast  from 'react-hot-toast'
 
 const api = axios.create({
-  baseURL: '/api',
+  baseURL: '/http://13.201.40.154/api',
   timeout: 30000,
   headers: { 'Content-Type': 'application/json' },
 })
