@@ -1,0 +1,32 @@
+# ── Backend Server Dockerfile ────────────────────────────────────────────────
+FROM node:20-alpine AS base
+
+# Install dependencies for native modules
+RUN apk add --no-cache python3 make g++ curl
+
+WORKDIR /app
+
+# Copy package files
+COPY server/package*.json ./
+
+# Install production dependencies
+RUN npm ci --only=production
+
+# Copy server source
+COPY server/ ./
+
+# Create required directories
+RUN mkdir -p uploads logs
+
+# Run as non-root
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+RUN chown -R appuser:appgroup /app
+USER appuser
+
+EXPOSE 5000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+  CMD curl -f http://localhost:5000/health || exit 1
+
+CMD ["node", "server.js"]

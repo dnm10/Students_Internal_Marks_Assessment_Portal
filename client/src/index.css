@@ -1,0 +1,205 @@
+/* ============================================================
+   Global Styles — Student Marks Portal
+   ============================================================ */
+
+/* FIRST */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+/* THEN Tailwind */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+/* ── CSS Custom Properties ───────────────────────────────── */
+:root {
+  --color-primary:      #6366f1;
+  --color-primary-dark: #4f46e5;
+  --color-accent:       #06b6d4;
+  --color-bg:           #020617;
+  --color-surface:      #0f172a;
+  --color-surface-2:    #1e293b;
+  --color-border:       rgba(255,255,255,0.08);
+  --color-text:         #f1f5f9;
+  --color-muted:        #64748b;
+  --radius:             0.75rem;
+  --transition:         0.2s cubic-bezier(0.4,0,0.2,1);
+}
+
+/* Light mode overrides */
+.light {
+  --color-bg:       #f8fafc;
+  --color-surface:  #ffffff;
+  --color-surface-2:#f1f5f9;
+  --color-border:   rgba(0,0,0,0.08);
+  --color-text:     #0f172a;
+  --color-muted:    #64748b;
+}
+
+/* ── Base ────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background:  var(--color-bg);
+  color:       var(--color-text);
+  line-height: 1.6;
+  min-height:  100vh;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar              { width: 6px; height: 6px; }
+::-webkit-scrollbar-track        { background: transparent; }
+::-webkit-scrollbar-thumb        { background: #334155; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover  { background: #475569; }
+
+/* ── Glassmorphism Utility ───────────────────────────────── */
+@layer components {
+  .glass {
+    background:     rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border:         1px solid rgba(255, 255, 255, 0.08);
+    border-radius:  var(--radius);
+  }
+
+  .glass-card {
+    @apply glass shadow-glass transition-all duration-300;
+  }
+  .glass-card:hover {
+    border-color: rgba(99, 102, 241, 0.25);
+    box-shadow:   0 8px 32px rgba(99, 102, 241, 0.15);
+    transform:    translateY(-2px);
+  }
+
+  /* Gradient text */
+  .gradient-text {
+    background:            linear-gradient(135deg, #6366f1 0%, #06b6d4 100%);
+    -webkit-background-clip: text;
+    background-clip:         text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Shimmer skeleton effect */
+  .skeleton {
+    background:           linear-gradient(90deg, #1e293b 25%, #334155 50%, #1e293b 75%);
+    background-size:      200% 100%;
+    animation:            shimmer 1.8s ease-in-out infinite;
+    border-radius:        var(--radius);
+  }
+
+  /* Premium button */
+  .btn-primary {
+    @apply px-5 py-2.5 bg-primary-600 hover:bg-primary-500 text-white font-semibold
+           rounded-xl transition-all duration-200 shadow-lg hover:shadow-glow
+           active:scale-95 focus:outline-none focus:ring-2 focus:ring-primary-400;
+  }
+  .btn-secondary {
+    @apply px-5 py-2.5 glass text-slate-200 hover:text-white font-semibold
+           rounded-xl transition-all duration-200 hover:border-primary-500/40
+           active:scale-95 focus:outline-none focus:ring-2 focus:ring-primary-400;
+  }
+  .btn-danger {
+    @apply px-5 py-2.5 bg-red-600 hover:bg-red-500 text-white font-semibold
+           rounded-xl transition-all duration-200 active:scale-95;
+  }
+  .btn-success {
+    @apply px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold
+           rounded-xl transition-all duration-200 active:scale-95;
+  }
+
+  /* Input field */
+  .input-field {
+    @apply w-full px-4 py-2.5 bg-dark-800/60 border border-white/10 rounded-xl
+           text-slate-200 placeholder-slate-500 text-sm
+           focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500
+           transition-all duration-200;
+  }
+
+  /* Badge */
+  .badge { @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium; }
+  .badge-success { @apply badge bg-emerald-500/15 text-emerald-400 ring-1 ring-emerald-500/25; }
+  .badge-warning { @apply badge bg-amber-500/15 text-amber-400 ring-1 ring-amber-500/25; }
+  .badge-danger  { @apply badge bg-red-500/15 text-red-400 ring-1 ring-red-500/25; }
+  .badge-info    { @apply badge bg-blue-500/15 text-blue-400 ring-1 ring-blue-500/25; }
+  .badge-primary { @apply badge bg-primary-500/15 text-primary-400 ring-1 ring-primary-500/25; }
+  .badge-gray    { @apply badge bg-slate-500/15 text-slate-400 ring-1 ring-slate-500/25; }
+
+  /* Stat card */
+  .stat-card {
+    @apply glass-card p-5 flex flex-col gap-2;
+  }
+
+  /* Table */
+  .data-table {
+    @apply w-full text-sm;
+  }
+  .data-table thead th {
+    @apply px-4 py-3 text-left text-xs font-semibold text-slate-400 uppercase tracking-wider
+           border-b border-white/5 bg-dark-800/30;
+  }
+  .data-table tbody tr {
+    @apply border-b border-white/5 transition-colors hover:bg-white/[0.02];
+  }
+  .data-table tbody td {
+    @apply px-4 py-3 text-slate-300;
+  }
+
+  /* Sidebar item active */
+  .sidebar-item {
+    @apply flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium
+           text-slate-400 hover:text-white hover:bg-white/5 transition-all duration-200 cursor-pointer;
+  }
+  .sidebar-item.active {
+    @apply text-white bg-primary-600/20 border border-primary-500/30;
+  }
+
+  /* Page title */
+  .page-title {
+    @apply text-2xl font-bold text-white;
+  }
+  .page-subtitle {
+    @apply text-sm text-slate-400 mt-1;
+  }
+
+  /* Divider */
+  .divider { @apply border-t border-white/5 my-4; }
+
+  /* Glow dot indicator */
+  .dot-online  { @apply w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_6px_#34d399]; }
+  .dot-offline { @apply w-2 h-2 rounded-full bg-slate-500; }
+}
+
+/* ── Animations ──────────────────────────────────────────── */
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+@keyframes fadeIn  { from { opacity: 0; }                              to { opacity: 1; } }
+@keyframes slideUp { from { transform: translateY(12px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+@keyframes float   { 0%,100% { transform: translateY(0); }            50% { transform: translateY(-8px); } }
+
+.animate-fade-in  { animation: fadeIn  0.4s ease both; }
+.animate-slide-up { animation: slideUp 0.35s ease both; }
+.animate-float    { animation: float 6s ease-in-out infinite; }
+
+/* ── Recharts Override ───────────────────────────────────── */
+.recharts-tooltip-wrapper .recharts-default-tooltip {
+  background:  rgba(15, 23, 42, 0.9) !important;
+  border:      1px solid rgba(99,102,241,0.3) !important;
+  border-radius: 0.75rem !important;
+  backdrop-filter: blur(8px);
+}
+.recharts-cartesian-axis-tick text { fill: #64748b !important; font-size: 11px; }
+.recharts-legend-item-text         { color: #94a3b8 !important; }
+
+/* ── Scrollbar for tables ────────────────────────────────── */
+.table-container {
+  overflow-x: auto;
+  border-radius: var(--radius);
+  border: 1px solid rgba(255,255,255,0.06);
+}

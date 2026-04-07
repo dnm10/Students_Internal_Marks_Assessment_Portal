@@ -1,0 +1,94 @@
+version: '3.9'
+
+services:
+  # ── MySQL Database ────────────────────────────────────────────────────────
+  mysql:
+    image: mysql:8.0
+    container_name: marks-portal-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-rootpassword}
+      MYSQL_DATABASE:      ${DB_NAME:-student_marks_portal}
+      MYSQL_USER:          ${DB_USER:-portaluser}
+      MYSQL_PASSWORD:      ${DB_PASSWORD:-portalpass}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - portal-net
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Backend API ───────────────────────────────────────────────────────────
+  server:
+    build:
+      context: ./server
+      dockerfile: ../Dockerfile.server
+    container_name: marks-portal-server
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      NODE_ENV:      production
+      PORT:          5000
+      DB_HOST:       mysql
+      DB_PORT:       3306
+      DB_NAME:       ${DB_NAME:-student_marks_portal}
+      DB_USER:       ${DB_USER:-portaluser}
+      DB_PASSWORD:   ${DB_PASSWORD:-portalpass}
+      JWT_SECRET:    ${JWT_SECRET:-changeme_production_secret}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-7d}
+      JWT_REFRESH_SECRET:   ${JWT_REFRESH_SECRET:-changeme_refresh_secret}
+      JWT_REFRESH_EXPIRES_IN: ${JWT_REFRESH_EXPIRES_IN:-30d}
+      FIREBASE_PROJECT_ID:   ${FIREBASE_PROJECT_ID:-}
+      FIREBASE_CLIENT_EMAIL: ${FIREBASE_CLIENT_EMAIL:-}
+      FIREBASE_PRIVATE_KEY:  ${FIREBASE_PRIVATE_KEY:-}
+      FIREBASE_DATABASE_URL: ${FIREBASE_DATABASE_URL:-}
+      AWS_REGION:            ${AWS_REGION:-us-east-1}
+      AWS_ACCESS_KEY_ID:     ${AWS_ACCESS_KEY_ID:-}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-}
+      AWS_S3_BUCKET:         ${AWS_S3_BUCKET:-}
+      AWS_SES_FROM_EMAIL:    ${AWS_SES_FROM_EMAIL:-}
+      CLIENT_URL:            ${CLIENT_URL:-http://localhost:5173}
+      COLLEGE_NAME:          ${COLLEGE_NAME:-Student Marks Portal}
+    ports:
+      - "5000:5000"
+    volumes:
+      - server_uploads:/app/uploads
+      - server_logs:/app/logs
+    networks:
+      - portal-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ── React Frontend ────────────────────────────────────────────────────────
+  client:
+    build:
+      context: ./client
+      dockerfile: ../Dockerfile.client
+    container_name: marks-portal-client
+    restart: unless-stopped
+    depends_on:
+      - server
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - portal-net
+
+volumes:
+  mysql_data:
+  server_uploads:
+  server_logs:
+
+networks:
+  portal-net:
+    driver: bridge

@@ -1,0 +1,48 @@
+-- =============================================
+-- Migration: 002_create_departments.sql
+-- =============================================
+
+CREATE TABLE IF NOT EXISTS departments (
+  id          INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  name        VARCHAR(100) NOT NULL,
+  code        VARCHAR(20)  NOT NULL UNIQUE,
+  description TEXT,
+  is_active   BOOLEAN      NOT NULL DEFAULT TRUE,
+  created_at  TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at  TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS branches (
+  id            INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  department_id INT UNSIGNED NOT NULL,
+  name          VARCHAR(100) NOT NULL,
+  code          VARCHAR(20)  NOT NULL UNIQUE,
+  is_active     BOOLEAN      NOT NULL DEFAULT TRUE,
+  created_at    TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at    TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (department_id) REFERENCES departments(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS semesters (
+  id         INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  number     TINYINT UNSIGNED NOT NULL,
+  label      VARCHAR(30) NOT NULL,
+  is_current BOOLEAN NOT NULL DEFAULT FALSE,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY uq_sem_number (number)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS sections (
+  id            INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  branch_id     INT UNSIGNED NOT NULL,
+  semester_id   INT UNSIGNED NOT NULL,
+  name          VARCHAR(10)  NOT NULL,
+  academic_year VARCHAR(9)   NOT NULL COMMENT 'e.g. 2024-2025',
+  is_active     BOOLEAN      NOT NULL DEFAULT TRUE,
+  created_at    TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at    TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (branch_id)   REFERENCES branches(id)   ON DELETE CASCADE,
+  FOREIGN KEY (semester_id) REFERENCES semesters(id)  ON DELETE RESTRICT,
+  UNIQUE KEY uq_section (branch_id, semester_id, name, academic_year)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
