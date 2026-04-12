@@ -4,8 +4,10 @@
 import axios from 'axios'
 import toast  from 'react-hot-toast'
 
+const baseURL = import.meta.env.VITE_API_URL || "http://13.233.198.199:5000/api";
+
 export const api = axios.create({
-  baseURL: "http://13.233.198.199:5000/api",
+  baseURL,
 });
 
 // ── Request interceptor: attach access token ──────────────────────────────────
@@ -54,7 +56,8 @@ api.interceptors.response.use(
       }
 
       try {
-        const { data } = await axios.post('http://13.233.198.199:5000/api/auth/refresh', { refreshToken })
+        const refreshUrl = `${baseURL.replace(/\/+$/, '')}/auth/refresh`;
+        const { data } = await axios.post(refreshUrl, { refreshToken })
         const newToken = data.data.accessToken
         localStorage.setItem('accessToken', newToken)
         api.defaults.headers['Authorization'] = `Bearer ${newToken}`
