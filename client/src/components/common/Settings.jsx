@@ -1,14 +1,16 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { toggleTheme, selectTheme } from '../../store/slices/uiSlice'
 import { InfoCard } from '../../components/common/Cards'
 import { Bell, Moon, Sun, Shield, Settings as SettingsIcon } from 'lucide-react'
 
 export default function Settings() {
+  const dispatch = useDispatch()
+  const theme = useSelector(selectTheme)
+  const isDark = theme === 'dark'
+
   const user = JSON.parse(localStorage.getItem('user')) || {}
   const role = user?.role?.toLowerCase()
-
-  const [darkMode, setDarkMode] = useState(
-    localStorage.getItem('theme') === 'dark'
-  )
 
   const [form, setForm] = useState({
     name: '',
@@ -17,16 +19,6 @@ export default function Settings() {
     notifications: true,
   })
 
-  // 🌙 Dark Mode Logic
-  useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add('dark')
-      localStorage.setItem('theme', 'dark')
-    } else {
-      document.documentElement.classList.remove('dark')
-      localStorage.setItem('theme', 'light')
-    }
-  }, [darkMode])
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target
@@ -111,13 +103,13 @@ export default function Settings() {
 
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-2 text-slate-300">
-              {darkMode ? <Moon size={16} /> : <Sun size={16} />}
+              {isDark ? <Moon size={16} /> : <Sun size={16} />}
               Dark Mode
             </div>
             <input
               type="checkbox"
-              checked={darkMode}
-              onChange={() => setDarkMode(!darkMode)}
+              checked={isDark}
+              onChange={() => dispatch(toggleTheme())}
               className="accent-indigo-500"
             />
           </div>

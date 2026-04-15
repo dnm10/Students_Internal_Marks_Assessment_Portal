@@ -4,19 +4,28 @@
  */
 require('dotenv').config();
 require('express-async-errors');
-
-const http    = require('http');
-const app     = require('./app');
-const { connectDB }       = require('./config/db');
-const { initFirebase }    = require('./config/firebase');
-const logger  = require('./utils/logger');
+const { getParameter } = require('./ssm');
+const http = require('http');
+const app = require('./app');
+const { connectDB } = require('./config/db');
+const { initFirebase } = require('./config/firebase');
+const logger = require('./utils/logger');
 
 const PORT = process.env.PORT || 5000;
 
 async function startServer() {
   try {
-    // 1. Connect to MySQL
-    await connectDB();
+    // 1. Load secrets from SSM
+    const secrets = await loadSecrets();
+
+    // 2. Connect to MySQL using SSM secrets
+    await connectDB({
+      host: secrets.dbHost,
+      user: secrets.dbUser,
+      password: secrets.dbPassword,
+      database: secrets.dbName
+    });
+
     logger.info('✅ MySQL connected');
 
     // 2. Initialise Firebase Admin
@@ -25,7 +34,7 @@ async function startServer() {
 
     // 3. Start HTTP server
     const server = http.createServer(app);
-    server.listen(PORT, () => {
+    server.listen(PORT, "0.0.0.0", () => {
       logger.info(`🚀 Server running on port ${PORT} [${process.env.NODE_ENV}]`);
     });
 
@@ -38,12 +47,28 @@ async function startServer() {
       });
     };
     process.on('SIGTERM', () => shutdown('SIGTERM'));
-    process.on('SIGINT',  () => shutdown('SIGINT'));
+    process.on('SIGINT', () => shutdown('SIGINT'));
 
   } catch (err) {
     logger.error('Failed to start server:', err);
     process.exit(1);
   }
+}
+
+async function loadSecrets() {
+  const dbPassword = await getParameter("/student-portal/db-password");
+  const dbHost = await getParameter("/student-portal/db-host");
+  const dbUser = await getParameter("/student-portal/db-user");
+  const dbName = await getParameter("/student-portal/db-name");
+  const jwtSecret = await getParameter("/student-portal/jwt-secret");
+
+  return {
+    dbPassword,
+    dbHost,
+    dbUser,
+    dbName,
+    jwtSecret
+  };
 }
 
 startServer();
