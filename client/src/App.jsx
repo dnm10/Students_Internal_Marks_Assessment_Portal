@@ -31,7 +31,7 @@ import AdminReports    from './pages/admin/Reports'
 
 // HOD pages
 import HodDashboard    from './pages/hod/Dashboard'
-import ApproveMarks    from './pages/hod/ApproveMarks'
+// import ApproveMarks    from './pages/hod/ApproveMarks'
 import HodReports      from './pages/hod/Reports'
 import HodAnalytics    from './pages/hod/Analytics'
 
@@ -118,7 +118,7 @@ export default function App() {
         <Route element={<ProtectedRoute allowedRoles={['hod', 'admin', 'superadmin']} />}>
           <Route element={<DashLayout role="hod" />}>
             <Route path="/hod"               element={<HodDashboard />} />
-            <Route path="/hod/approve-marks" element={<ApproveMarks />} />
+            {/* <Route path="/hod/approve-marks" element={<ApproveMarks />} /> */}
             <Route path="/hod/reports"       element={<HodReports />} />
             <Route path="/hod/analytics" element={<HodAnalytics />} />
             <Route path="/hod/settings" element={<Settings />} />

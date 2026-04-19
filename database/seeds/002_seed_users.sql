@@ -2,7 +2,7 @@
 -- Seed: 002_seed_users.sql
 -- Passwords are bcrypt of 'Password@123'
 -- =============================================
-
+USE student_marks_portal;
 SET @bcrypt_pass = '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewlrPPT1Z9M7OIYK';
 
 -- Super Admin

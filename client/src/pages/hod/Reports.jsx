@@ -27,7 +27,6 @@ export default function HodReports() {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {[
-          { title:'Marks Report (Excel)', desc:'All marks for selected subject & section', type:'marks', color:'text-emerald-400' },
           { title:'Attendance Report (Excel)', desc:'Attendance summary with shortage flags', type:'att', color:'text-cyan-400' },
         ].map(r => (
           <InfoCard key={r.type} title={r.title} subtitle={r.desc}>

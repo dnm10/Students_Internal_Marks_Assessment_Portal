@@ -15,7 +15,7 @@ const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 10 
 router.use(authenticate);
 
 // GET /api/users — list users
-router.get('/', authorize('superadmin','admin','hod'), ctrl.listUsers);
+router.get('/', authorize('superadmin','admin','hod','professor'), ctrl.listUsers);
 
 // GET /api/users/stats — system statistics
 router.get('/stats', authorize('superadmin','admin'), ctrl.getSystemStats);

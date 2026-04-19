@@ -2,7 +2,7 @@
 -- Seed: 004_seed_marks.sql
 -- Realistic marks for 20 students × 10 subjects
 -- =============================================
-
+USE student_marks_portal;
 -- Helper: Insert marks for students (user_id 8-27) for subject 1 (DAA), section 1
 INSERT INTO marks (student_id, subject_id, section_id, academic_year, semester_id, cie1, cie2, cie3, assignment1, assignment2, attendance_marks, status, submitted_by, submitted_at, approved_by, approved_at) VALUES
 -- student01

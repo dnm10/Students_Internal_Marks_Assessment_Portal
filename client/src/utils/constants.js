@@ -57,7 +57,7 @@ export const NAV_ITEMS = {
   ],
   hod: [
     { label: 'Dashboard',    path: '/hod',                 icon: 'LayoutDashboard' },
-    { label: 'Approve Marks',path: '/hod/approve-marks',  icon: 'CheckSquare' },
+    // { label: 'Approve Marks',path: '/hod/approve-marks',  icon: 'CheckSquare' },
     { label: 'Analytics',    path: '/hod/analytics',      icon: 'BarChart3' },
     { label: 'Reports',      path: '/hod/reports',        icon: 'FileBarChart' },
     { label: 'Settings',     path: '/hod/settings',      icon: 'Settings' },

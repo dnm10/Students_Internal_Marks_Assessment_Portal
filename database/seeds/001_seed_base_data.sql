@@ -2,7 +2,7 @@
 -- Seed: 001_seed_base_data.sql
 -- Description: Departments, branches, semesters, sections
 -- =============================================
-
+USE student_marks_portal;
 -- Semesters
 INSERT INTO semesters (number, label, is_current) VALUES
   (1, '1st Semester', FALSE),

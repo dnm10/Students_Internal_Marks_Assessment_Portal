@@ -134,9 +134,9 @@ export default function MarksEntry() {
               <Save className="w-4 h-4"/> {isSaving?'Saving…':'Save Changes'}
             </button>
           )}
-          <button onClick={handleSubmit} disabled={submitting || isLocked} className="btn-primary flex items-center gap-2 text-sm">
+          {/* <button onClick={handleSubmit} disabled={submitting || isLocked} className="btn-primary flex items-center gap-2 text-sm">
             <Send className="w-4 h-4"/> {submitting?'Submitting…':isLocked?'Locked':'Submit for Approval'}
-          </button>
+          </button> */}
         </div>
       </div>
 

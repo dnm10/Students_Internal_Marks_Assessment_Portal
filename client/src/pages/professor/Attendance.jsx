@@ -22,10 +22,13 @@ export default function AttendanceMark() {
   const [filter, setFilter] = useState({ subjectId:'1', sectionId:'1', date: new Date().toISOString().slice(0,10) })
   const [students, setStudents] = useState([])
   const [attendance, setAttendance] = useState({})
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [errorMsg, setErrorMsg] = useState('')
   const [saving,  setSaving]  = useState(false)
 
   useEffect(() => {
+    setLoading(true)
+    setErrorMsg('')
     // Fetch students in this section
     api.get('/users', { params: { role:'student' } })
       .then(({ data }) => {
@@ -34,7 +37,11 @@ export default function AttendanceMark() {
         ;(data.data.rows||[]).forEach(s => { init[s.id] = 'present' })
         setAttendance(init)
       })
-      .catch(()=>{})
+      .catch((err)=>{
+         console.error('Fetch students error:', err)
+         setErrorMsg(err.response?.data?.message || err.message || 'Failed to load students')
+      })
+      .finally(()=>setLoading(false))
   }, [filter.sectionId])
 
   const toggle = (studentId, status) => {
@@ -116,8 +123,12 @@ export default function AttendanceMark() {
             </tr>
           </thead>
           <tbody>
-            {students.length === 0 ? (
+            {loading ? (
               <tr><td colSpan={3} className="px-4 py-10 text-center text-slate-500 text-sm">Loading students…</td></tr>
+            ) : errorMsg ? (
+              <tr><td colSpan={3} className="px-4 py-10 text-center text-red-500 text-sm font-semibold">{errorMsg}</td></tr>
+            ) : students.length === 0 ? (
+              <tr><td colSpan={3} className="px-4 py-10 text-center text-slate-500 text-sm">No students found.</td></tr>
             ) : students.map(student => (
               <tr key={student.id} className="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
                 <td className="px-4 py-2.5"><code className="text-accent-400 text-xs font-mono">{student.usn||'—'}</code></td>

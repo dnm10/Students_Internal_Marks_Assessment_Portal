@@ -38,14 +38,6 @@ export default function Navbar() {
 
       {/* Actions */}
       <div className="flex items-center gap-1">
-        {/* Theme toggle */}
-        <button
-          onClick={() => dispatch(toggleTheme())}
-          className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-colors"
-          title="Toggle theme"
-        >
-          {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-        </button>
 
         {/* Notifications */}
         <button className="relative p-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-colors">

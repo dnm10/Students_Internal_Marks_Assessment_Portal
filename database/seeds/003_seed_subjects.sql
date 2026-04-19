@@ -1,7 +1,7 @@
 -- =============================================
 -- Seed: 003_seed_subjects_and_mappings.sql
 -- =============================================
-
+USE student_marks_portal;
 -- Subjects for CSE Semester 4
 INSERT INTO subjects (branch_id, semester_id, code, name, credits, subject_type) VALUES
   (1, 4, 'CS401', 'Design and Analysis of Algorithms', 4, 'theory'),
